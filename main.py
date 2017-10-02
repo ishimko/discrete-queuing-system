@@ -13,7 +13,7 @@ DEFAULT_SETTINGS = UnitsSettings(p=0.75, pi1=0.7, pi2=0.7)
 
 def read_probability(value_name):
     result = None
-    while not result:
+    while result is None:
         raw_input = input('{}: '.format(value_name))
         try:
             result = float(raw_input)
