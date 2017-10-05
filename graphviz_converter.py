@@ -2,10 +2,12 @@ import re
 
 
 TRANSITION_REGEX = r"\"(\d+)\" -> \"(\d+)\" \[.*label = \"(.+)\".*\];"
-CONFIG_TEMPALTE = '''STATES = [
+CONFIG_TEMPALTE = '''TRANSITIONS = [
 {}
 ]'''
 INDENT = ' '*4
+GRAPHVIZ_FILE = "./states.gv"
+OUTPUT_FILE = './transitions.py'
 
 def format_statement(statement):
     return statement.replace("\\n", "").replace("*", " and ").replace("1-p", "not p")\
@@ -14,7 +16,7 @@ def format_statement(statement):
 
 
 def main():
-    fin = open("./states.gv", "r", encoding='UTF-8')
+    fin = open(GRAPHVIZ_FILE, "r", encoding='UTF-8')
 
     matches = re.finditer(TRANSITION_REGEX, "".join(fin.readlines()))
 
@@ -29,7 +31,7 @@ def main():
             if format_statement(statement):
                 all_states[start_state] = 0
                 entries.append(INDENT + "['" + start_state + "', '" + end_state + "', lambda p, pi1, pi2: " + format_statement(statement) + "],")
-    with open('states.py', 'w') as fout:
+    with open(OUTPUT_FILE, 'w') as fout:
         fout.write(CONFIG_TEMPALTE.format('\n'.join(entries)))
 
 
